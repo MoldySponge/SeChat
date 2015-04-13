@@ -1,10 +1,14 @@
 package sechatlib;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.event.*;
 
-public class SeChatWindow implements SeChatPanelManager{
+public class SeChatWindow implements SeChatPanelManager, ActionListener{
 	private LoginPanelController lPC = new LoginPanelController();
+	private SystemPanelController sPC = new SystemPanelController();
+	private CreateAccountPanelController cAPC = new CreateAccountPanelController();
 	
 	public SeChatWindow(){
 		seChatWindow.setSize(800, 400);
@@ -12,21 +16,42 @@ public class SeChatWindow implements SeChatPanelManager{
 				(int)(dim.getHeight()/2-seChatWindow.getHeight()/2));
 		seChatWindow.setTitle("SeChat Alpha");
 		seChatWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		seChatWindow.setLayout(new BorderLayout());
+		seChatWindow.setLayout(new BorderLayout());	
+		seChatWindow.add(systemPanel, BorderLayout.NORTH);
+		addListeners();
 		seChatWindow.setVisible(true);
-		addToWindow();
+		addToWindow(loginPanel);
 	}	
 	
 	public static void main(String []args){
 		SeChatWindow tpo = new SeChatWindow();		
 	}
 	
-	public void addToWindow(){
-		seChatWindow.add(loginPanel, BorderLayout.CENTER);
-		lPC.addToWindow();
+	public void addListeners(){
+		exitButton.addActionListener(this);
+		createAccountButton.addActionListener(this);
 	}
 	
-	public void removeFromWindow(){
-		
+	public void addToWindow(JPanel panelToAdd){
+		seChatWindow.add(panelToAdd, BorderLayout.CENTER);
+		panelToAdd.setVisible(true);
+		seChatWindow.repaint();
+	}
+	
+	public void removeFromWindow(JPanel panelToRemove){
+		seChatWindow.remove(panelToRemove);
+		panelToRemove.setVisible(false);
+		seChatWindow.repaint();
+	}
+	
+	public void actionPerformed(ActionEvent e){
+		if(e.getSource() == exitButton){
+			System.exit(0);
+		}
+		if(e.getSource() == createAccountButton){
+			System.out.println("Clicked Create Account Button");
+			removeFromWindow(loginPanel);
+			addToWindow(createAccountPanel);
+		}
 	}
 }

@@ -19,6 +19,7 @@ public interface SeChatPanelManager {
 	public JPanel loginPanel = new JPanel();
 	public JPanel createAccountPanel = new JPanel();
 	public JPanel mainPanel = new JPanel();
+	public JPanel systemPanel = new JPanel();
 	/*
 	 * Buttons used in the program
 	 * These might be changed to different labels in the future
@@ -35,6 +36,4 @@ public interface SeChatPanelManager {
 	public JButton sendButton = new JButton("send");
 	public JButton saveChat = new JButton("Save Chat");
 	
-	public void addToWindow();
-	public void removeFromWindow();
 }
