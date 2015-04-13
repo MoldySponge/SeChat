@@ -1,10 +1,19 @@
 package sechatlib;
 
+import java.awt.Toolkit;
+import java.awt.Dimension;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 
 public interface SeChatPanelManager {
 	/*
+	 * get user screen information
+	 */
+	public Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+	//the window
+	public JFrame seChatWindow = new JFrame();
+	/*	 
 	 * Panels used in the program
 	 */
 	public JPanel loginPanel = new JPanel();
