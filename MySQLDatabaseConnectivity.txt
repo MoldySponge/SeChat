@@ -1,0 +1,96 @@
+These are some brief instructions on MySQL Database Connectivity in Java.
+
+TOC:
+1. The Server
+1.1 The Binding
+1.2 New User Account
+1.3 Possible issues
+  a. MySQL will not start
+  b. No Authentication from Remote Host
+2. The Program
+2.1 Installing the Driver
+2.2 Using code to establish a connection
+
+1. The Server
+1.1 The Binding
+     In order for MySQL to accept any incoming connections on the IP level it must first know where to listen for them.
+You can do this by settinging the addresses it can bind to. 
+
+     In /etc/mysql/my.cnf move to the line for binding-address
+     
+     Make sure it is uncommented and make the address 0.0.0.0
+     (This is the default to accept all connections)
+
+     Restart MySQL by typing sudo /etc/init.d/mysql stop
+                             sudo /etc/init.d/mysql start
+
+     If MySQL fails to start either from command line by typing mysql
+     or by /etc/init.d/mysql start refer to 1.3 a. MySQL will not start
+
+1.2 New User Account
+    It is preferred you create a new MySQL user account which will be used to access the database from within the code
+of your program. This is preferred to using root because access can be restricted to only the privileges which are needed
+preventing problems which could occur from unauthorized access or accidental commands which mess up other databases. Typically
+an account should only have SELECT, INSERT, and UPDATE Privileges.
+
+       These commands are to be run in the mysql cli. 
+
+       First to create the user:
+       CREATE USER 'username'@'%' IDENTIFIED BY 'password';
+       GRANT SELECT PRILIVEGES on database.* to 'username'@'%';
+       
+       As a note, the second command may not be word for word correct, however the general idea is. It changes somewhat from old 
+to new versions. Take note of '%', in particular this is a wildcard in order to accept from any IP address and if your user account
+should be accessable from anywhere outside the local computer it is important to creat ehe user and grant access to the user created
+using the '%' in both instances. 
+ 
+      Repeat GRANT command with other permissions desired.
+
+      When all users and permissions have been granted it is important to tell mysql to reload it's permissions. This done with flushing privileges.
+
+      flush privileges;
+
+You should now be able to exit mysql and be setup properly from server side.
+
+2. The Program
+2.1 Installing the driver.
+   Java needs a JDBC driver (library) in order to connecto MySQL. This is done by downloading the Connect/J driver. There are various instructions
+on how to add this driver to your CLASSPATH but really all that needs to be done is have it extracted. Then place it somewhere in the program files or
+on your computer. Then if using eclipse, go to your project -> properties -> additional libraries -> additional external jars -> find your mysql.jar file
+add this.
+
+2.2 Using code to establish a connection
+
+   The next part is adding the driver code. In the class which will be connectiong place a function such as this.
+   import java.sql.Connection;
+   import java.sql.DriverManager;
+   import java.sql.SQLException;
+   private void connectDriver(){
+   try{
+       Class.forName("com.mysql.jdbc.Driver").newInstance();
+   }catch(Exception ex){
+   }
+   try{
+     conn = DriverManager.getConnection("jdbc:mysql://ip address:port(usually 3306/databasename","username","password"); //conn being a global variable of type Connection
+   }catch(SQLException ex){
+   System.out.println("SQLException: " + ex.getMessage());
+   System.out.println("SQLState: " + ex.getSQLState());
+   System.out.println("VendorError: " + ex.getErrorCode());
+   }
+This should be enought to establish the connection
+   
+1.3 Possible Issues
+
+1.3a MySQL will not start
+It is possible that after changing binding information mysql will not start. on a Linux environment this could help.
+   First kill any processes, this can likely be done by typing pkill -9 mysqld
+
+   Then find any .pid files by /var/run/lib/mysql/ any .pid file remove
+
+   Now go back and try to start mysql. Usually /etc/init.d/mysql start
+
+1.3b No Authentication from remote host
+   My only known issue with this is if the user was not configured correctly. Either make sure your ip address is correct in the
+   'username'@'ipaddress' in all commands or if connecting from any ip address everything is refrenced even in creation for ip
+   under the '%' wild card. Also there may be issues with firewall and port blocking. Note the connecting port can be cahnged in the 
+   /etc/mysql/my.cnf file from the default of 3306.

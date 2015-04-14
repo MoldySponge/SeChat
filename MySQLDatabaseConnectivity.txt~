@@ -1,0 +1,28 @@
+These are some brief instructions on MySQL Database Connectivity in Java.
+
+TOC:
+1. The Server
+1.1 The Binding
+1.2 New User Account
+1.3 Possible issues
+  a. MySQL will not start
+  b. No AUthentication from Remote Host
+2. The Program
+
+1. The Server
+1.1 The Binding
+     In order for MySQL to accept any incoming connections on the IP level it must first know where to listen for them.
+You can do this by settinging the addresses it can bind to. 
+
+     In /etc/mysql/my.cnf move to the line for binding-address
+     
+     Make sure it is uncommented and make the address 0.0.0.0
+     (This is the default to accept all connections)
+
+     Restart MySQL by typing sudo /etc/init.d/mysql stop
+                             sudo /etc/init.d/mysql start
+
+     If MySQL fails to start either from command line by typing mysql
+     or by /etc/init.d/mysql start refer to 1.3 a. MySQL will not start
+
+1.2 New User Account
