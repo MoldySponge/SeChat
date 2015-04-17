@@ -11,7 +11,7 @@ public class SystemPanelController implements SeChatPanelManager{
 	public void setupPanel(){
 		systemPanel.setLayout(new BorderLayout());
 		systemPanel.setBorder(BorderFactory.createEtchedBorder());
-		systemPanel.setBackground(Color.WHITE);
+		systemPanel.setBackground(new Color(50, 200, 150));
 		systemPanel.add(logOutButton, BorderLayout.EAST);
 		logOutButton.setVisible(false);
 		systemPanel.add(exitButton, BorderLayout.EAST);

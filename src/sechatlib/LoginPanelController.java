@@ -1,12 +1,17 @@
 package sechatlib;
 import java.awt.BorderLayout;
+
+import javax.swing.BorderFactory;
+
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 public class LoginPanelController implements SeChatPanelManager{
 
 	public LoginPanelController(){
@@ -15,6 +20,8 @@ public class LoginPanelController implements SeChatPanelManager{
 	public void setupPanel(){
 		loginPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
+		loginPanel.setBackground(Color.WHITE);
+		loginPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
