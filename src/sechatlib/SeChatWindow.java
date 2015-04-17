@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.*;
+import java.security.NoSuchAlgorithmException;
 
 public class SeChatWindow implements SeChatPanelManager, ActionListener{
 	private LoginPanelController lPC = new LoginPanelController();
@@ -59,7 +60,12 @@ public class SeChatWindow implements SeChatPanelManager, ActionListener{
 			addToWindow(createAccountPanel);			
 		}
 		if(e.getSource() == createButton){
-			cAPC.checkCreateCredentials();
+			try{
+				cAPC.checkCreateCredentials();	
+			}catch(NoSuchAlgorithmException ex){
+				System.out.println("Message: " + ex.getMessage());
+			}
+			
 		}
 	}
 }

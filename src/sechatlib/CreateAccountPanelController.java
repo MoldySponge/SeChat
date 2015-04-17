@@ -2,6 +2,8 @@ package sechatlib;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import javax.swing.JLabel;
@@ -11,6 +13,7 @@ import javax.swing.JPasswordField;
 public class CreateAccountPanelController implements SeChatPanelManager{
 
 	private MySQLDatabaseController tc = new MySQLDatabaseController();
+	private PasswordControl pc;
 	private GridBagConstraints c = new GridBagConstraints();
 	private JTextField usernameTextField = new JTextField(20);
 	private JPasswordField userPasswordField = new JPasswordField(20);
@@ -46,23 +49,27 @@ public class CreateAccountPanelController implements SeChatPanelManager{
 		createAccountPanel.setVisible(false);
 	}
 	
-	public boolean checkCreateCredentials(){
+	public boolean checkCreateCredentials() throws NoSuchAlgorithmException{
 		String desiredUsername = usernameTextField.getText();
 		tc.connectToDatabase();
 		if(tc.checkForUsernameConflict(desiredUsername)){
-			System.out.println("Can Create!");		
+			System.out.println("Username Good!");		
 		}
 		else{
-			System.out.println("Cannot Create!");
+			System.out.println("UserName already exists!");
 			return false;
 		}
-		if(Arrays.equals(userPasswordField.getPassword(),userRetypePasswordField.getPassword())){
-			System.out.println("Passwords match");
+		try{
+			pc = new PasswordControl();
+			if(!pc.comparePasswords(pc.getHash(Arrays.toString(userPasswordField.getPassword())),
+					pc.getHash(Arrays.toString(userRetypePasswordField.getPassword())))){
+				System.out.println("Passwords do not match");
+				return false;
+			}
+		}catch(UnsupportedEncodingException ex){
+			System.out.println("Message: " + ex.getMessage());
 		}
-		else{
-			System.out.println("Passwords don't match");
-			return false;
-		}
+		System.out.println("User can be created");
 		return true;
 	}
 }
