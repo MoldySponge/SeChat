@@ -35,5 +35,9 @@ public interface SeChatPanelManager {
 	public JButton exitButton = new JButton("Exit");
 	public JButton sendButton = new JButton("send");
 	public JButton saveChat = new JButton("Save Chat");
+	/*
+	 * Array used as stack to use the function of the back button.
+	 */
+	public JPanel[] backStack = new JPanel[3];
 	
 }
