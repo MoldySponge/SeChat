@@ -13,7 +13,7 @@ public class SystemPanelController implements SeChatPanelManager{
 		systemPanel.setBorder(BorderFactory.createEtchedBorder());
 		systemPanel.setBackground(new Color(50, 200, 150));
 		systemPanel.add(logOutButton, BorderLayout.EAST);
-		logOutButton.setVisible(false);
+		logOutButton.setVisible(true);
 		systemPanel.add(exitButton, BorderLayout.EAST);
 	}
 }
