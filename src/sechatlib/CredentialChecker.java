@@ -1,15 +1,25 @@
 package sechatlib;
 
 import java.io.*;
-import java.net.*;
+import java.util.Arrays;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+
 
 public class CredentialChecker {
 
-	private Socket client;
+	private SSLSocketFactory sslSocketFactory;
+	private SSLSocket sslSocketClient;
 	
 	private boolean connectToServer(){
 		try{
-			client = new Socket("107.170.220.121", 3456);
+			System.setProperty("javax.net.ssl.trustStore", "keystore.jks");
+			System.setProperty("javax.net.ssl.keyStorePassword", "294337");
+			//System.setProperty("javax.net.debug", "all");
+			
+			sslSocketFactory = (SSLSocketFactory)SSLSocketFactory.getDefault();
+			sslSocketClient = (SSLSocket)sslSocketFactory.createSocket("107.170.220.121",3456);
 			return true;
 		}catch(IOException ex){
 			System.out.println("Error connecting to server: " + ex.getMessage());
@@ -21,11 +31,11 @@ public class CredentialChecker {
 		String fullCheckString = "c"+userName;
 		try{
 			//sends username to be checked out
-			OutputStream outToServer = client.getOutputStream();
+			OutputStream outToServer = sslSocketClient.getOutputStream();
 			DataOutputStream out = new DataOutputStream(outToServer);
 			out.writeUTF(fullCheckString);
 			//waits for response
-			InputStream inFromServer = client.getInputStream();
+			InputStream inFromServer = sslSocketClient.getInputStream();
 			DataInputStream in = new DataInputStream(inFromServer);
 			String result = in.readUTF();
 			
@@ -33,12 +43,12 @@ public class CredentialChecker {
 				return true;				
 			}
 			else{
-				client.close();
+				sslSocketClient.close();
 				return false;
 			}			
 		}catch(IOException ex){
 			System.out.println("Error Communicating with server: " + ex.getMessage());
-			try{client.close();}catch(IOException x){System.out.println("Problem closing connection: " + x.getMessage());};
+			try{sslSocketClient.close();}catch(IOException x){System.out.println("Problem closing connection: " + x.getMessage());};
 			return false;
 		}
 	}
@@ -48,37 +58,47 @@ public class CredentialChecker {
 		String result = "false";
 		System.out.println("here");
 		try{
-			OutputStream outToServer = client.getOutputStream();
+			OutputStream outToServer = sslSocketClient.getOutputStream();
 			DataOutputStream out = new DataOutputStream(outToServer);
 			out.writeUTF(fullLogInString);
-			out.write(password);
+			for(int i = 0;i<password.length;i++){
+				out.writeByte(password[i]);
+			}
+			System.out.println(Arrays.toString(password));
 			
-			InputStream inFromServer = client.getInputStream();
+			InputStream inFromServer = sslSocketClient.getInputStream();
 			DataInputStream in = new DataInputStream(inFromServer);
 			result = in.readUTF();
+
 			if(result.compareTo("true") == 0){
-				client.close();
+				System.out.println(result);
 				return true;
 			}
-			client.close();
+			sslSocketClient.close();
 			return false;
 		}catch(IOException ex){
 			System.out.println("Error communicating with server during LogIn process: " + ex.getMessage());
-			try{client.close();}catch(IOException x){System.out.println("Problem closing connection: " + x.getMessage());};
+			try{sslSocketClient.close();}catch(IOException x){System.out.println("Problem closing connection: " + x.getMessage());};
 			return false;
 		}
 	}
 	public boolean sendPasswordHash(byte []password){
 		try{
-			OutputStream outToServer = client.getOutputStream();
-			DataOutputStream out = new DataOutputStream(outToServer);			
-		    out.write(password);
-		    client.close();
+			OutputStream outToServer = sslSocketClient.getOutputStream();
+			DataOutputStream out = new DataOutputStream(outToServer);
+			for(int i = 0;i<password.length;i++){
+				out.writeByte(password[i]);
+			}
+		    sslSocketClient.close();
 			return true;
 		}catch(IOException ex){
 			System.out.println("Error in password sending: " + ex.getMessage());
-			try{client.close();}catch(IOException x){System.out.println("Problem closing connection: " + x.getMessage());};
+			try{sslSocketClient.close();}catch(IOException x){System.out.println("Problem closing connection: " + x.getMessage());};
 			return false;
 		}
+	}
+	
+	public SSLSocket getSSLConnection(){
+		return sslSocketClient;
 	}
 }
