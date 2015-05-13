@@ -88,7 +88,7 @@ public class SeChatWindow implements SeChatPanelManager, ActionListener{
 				if(lPC.checkLogInCredentials()){
 					logOutButton.setVisible(true);
 					removeFromWindow(loginPanel);
-					mPC = new MainPanelController();
+					mPC = new MainPanelController(lPC.getSSLConnection());
 					addToWindow(mainPanel);
 					seChatWindow.validate();
 					seChatWindow.repaint();

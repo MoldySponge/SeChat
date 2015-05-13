@@ -10,6 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import javax.net.ssl.SSLSocket;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -24,7 +26,6 @@ public class LoginPanelController implements SeChatPanelManager{
     private JLabel welcomeMessage = new JLabel();
     private JTextField userNameTextField = new JTextField(20);
     private JPasswordField userPasswordField = new JPasswordField(20);
-
     
     private String defaultMessage = "Welcome to SeChat";
 	public LoginPanelController(){
@@ -62,13 +63,13 @@ public class LoginPanelController implements SeChatPanelManager{
 		loginPanel.setVisible(false);
 	}
 	public boolean checkLogInCredentials() throws NoSuchAlgorithmException{
-		return true;
-		/* commented for testing purposes of adding main panel
+		//return true;
+		// commented for testing purposes of adding main panel
 		try{
 			pc = new PasswordControl();
 			String userName = userNameTextField.getText();
 			byte[] userPassword = pc.getHash(Arrays.toString(userPasswordField.getPassword()));
-			System.out.println("Here in checkLogInCredentials");
+			System.out.println(Arrays.toString(userPassword));
 			if(cc.checkLogIn(userName, userPassword)){
 				return true;
 			}
@@ -77,6 +78,10 @@ public class LoginPanelController implements SeChatPanelManager{
 		      System.out.println("Problem with password Encoding: " + ex.getMessage());
 		      return false;
 		}
-		*/
+		
+	}
+	
+	public SSLSocket getSSLConnection(){
+		return cc.getSSLConnection();
 	}
 }

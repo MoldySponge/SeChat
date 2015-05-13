@@ -26,6 +26,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+import javax.net.ssl.SSLSocket;
+
 public class MainPanelController implements ActionListener,SeChatPanelManager{
  
 	private User loggedInUser;
@@ -47,15 +49,15 @@ public class MainPanelController implements ActionListener,SeChatPanelManager{
 	private JButton sendText = new JButton("SEND");
 	private int i = 0;
 	
-	public MainPanelController(){
-		initialUserSetup();
+	public MainPanelController(SSLSocket newUserSocket){
+		initialUserSetup(newUserSocket);
 		sendListener();
 		setupPanel();
 		setupContainers();
 		populateFriends();
 	}
-	public void initialUserSetup(){
-		loggedInUser = new User(this);
+	public void initialUserSetup(SSLSocket newUserSocket){
+		loggedInUser = new User(this, newUserSocket);
 		chatScrollPane = loggedInUser.getFriendScrollPane(1);
 		chatPanel = loggedInUser.getFriendChatPanel(1);
 		vertical = chatScrollPane.getVerticalScrollBar();

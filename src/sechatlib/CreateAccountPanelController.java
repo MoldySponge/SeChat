@@ -88,6 +88,7 @@ public class CreateAccountPanelController implements SeChatPanelManager{
 			return false;
 		}
 		cc.sendPasswordHash(pc.getHash(Arrays.toString(userPasswordField.getPassword())));
+		System.out.println(Arrays.toString(pc.getHash(Arrays.toString(userPasswordField.getPassword()))));
 		return true;
 	}
 }

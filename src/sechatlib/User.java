@@ -1,4 +1,7 @@
 package sechatlib;
+
+import javax.net.ssl.SSLSocket;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -19,13 +22,18 @@ public class User implements ActionListener,SeChatPanelManager{
 	private String userName;
 	private Friend[] friends = new Friend[10]; //holds each friend conversation and data
 	private JLabel[] friendLabels = new JLabel[10]; //the selectable label for the friend in that conversation
+	
+	private ClientRead reader;
+	private ClientWrite writer;
 	private MainPanelController mPM;
 	
+	private SSLSocket client;
 	private int clickedHighlight = 0;
 	
-	public User(MainPanelController curMainPanelController){
+	public User(MainPanelController curMainPanelController, SSLSocket newSSLClient){
 		mPM = curMainPanelController;
-		//get my name
+		client = newSSLClient;		
+		reader = new ClientRead(client, this);
 		//gets friends
 		//hashes names out into array
 		//places friends into friend array
@@ -33,6 +41,14 @@ public class User implements ActionListener,SeChatPanelManager{
 			friends[i] = new Friend("Friend" + i);
 		}
 		prepareFriendLabels();
+	}
+	
+	public void sendUserNameRequest(){
+		//writer.sendMessage("u");
+	}
+	
+	public void setUserName(String newUserName){
+	    userName = newUserName;
 	}
 	
 	public void prepareFriendLabels(){
