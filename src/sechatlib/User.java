@@ -20,8 +20,8 @@ import javax.swing.SwingConstants;
 public class User implements ActionListener,SeChatPanelManager{
 
 	private String userName;
-	private Friend[] friends = new Friend[10]; //holds each friend conversation and data
-	private JLabel[] friendLabels = new JLabel[10]; //the selectable label for the friend in that conversation
+	private Friend[] friends; //holds each friend conversation and data
+	private JLabel[] friendLabels; //the selectable label for the friend in that conversation
 	
 	private ClientRead reader;
 	private ClientWrite writer;
@@ -29,22 +29,12 @@ public class User implements ActionListener,SeChatPanelManager{
 	
 	private SSLSocket client;
 	private int clickedHighlight = 0;
+	private int setup = 0;
 	
 	public User(MainPanelController curMainPanelController, SSLSocket newSSLClient){
 		mPM = curMainPanelController;
 		client = newSSLClient;		
 		reader = new ClientRead(client, this);
-		//gets friends
-		//hashes names out into array
-		//places friends into friend array
-		for(int i = 0; i < friends.length; i++){
-			friends[i] = new Friend("Friend" + i);
-		}
-		prepareFriendLabels();
-	}
-	
-	public void sendUserNameRequest(){
-		//writer.sendMessage("u");
 	}
 	
 	public void setUserName(String newUserName){
@@ -63,10 +53,9 @@ public class User implements ActionListener,SeChatPanelManager{
 			friendLabels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
 			friendLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
 			addFriendLabelListeners(i);
-			friendLabels[0].setBackground(new Color(50, 200, 150));
-			
-		}		
-		
+			friendLabels[0].setBackground(new Color(50, 200, 150));			
+		}
+		mPM.continueSetup();
 	}
 	public JScrollPane getFriendScrollPane(int i){
 		return friends[i].getScrollPane();
@@ -82,8 +71,16 @@ public class User implements ActionListener,SeChatPanelManager{
 	
 	public void actionPerformed(ActionEvent e){
 		
+	}	
+
+	public void setFriends(String []userFriends){
+		friends = new Friend[userFriends.length];
+		friendLabels = new JLabel[userFriends.length];		
+		for(int i = 0; i < userFriends.length;i++){
+			friends[i] = new Friend(userFriends[i]);
+		}			
+		prepareFriendLabels();
 	}
-	
 	public void addFriendLabelListeners(final int i){
 		friendLabels[i].addMouseListener(new MouseAdapter(){
 			public void mouseEntered(MouseEvent e){

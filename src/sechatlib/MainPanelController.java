@@ -12,6 +12,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -50,17 +51,19 @@ public class MainPanelController implements ActionListener,SeChatPanelManager{
 	private int i = 0;
 	
 	public MainPanelController(SSLSocket newUserSocket){
-		initialUserSetup(newUserSocket);
+		initialUserSetup(newUserSocket);		
+	}
+	public void initialUserSetup(SSLSocket newUserSocket){
+		loggedInUser = new User(this, newUserSocket);
+	}	
+	public void continueSetup(){
+		chatScrollPane = loggedInUser.getFriendScrollPane(0);
+		chatPanel = loggedInUser.getFriendChatPanel(0);
+		vertical = chatScrollPane.getVerticalScrollBar();
 		sendListener();
 		setupPanel();
 		setupContainers();
 		populateFriends();
-	}
-	public void initialUserSetup(SSLSocket newUserSocket){
-		loggedInUser = new User(this, newUserSocket);
-		chatScrollPane = loggedInUser.getFriendScrollPane(1);
-		chatPanel = loggedInUser.getFriendChatPanel(1);
-		vertical = chatScrollPane.getVerticalScrollBar();
 	}
 	
 	public void setupContainers(){
