@@ -42,6 +42,7 @@ public class MainPanelController implements ActionListener,SeChatPanelManager{
 	private JPanel messagePanel = new JPanel();
 	private JPanel friendPanel = new JPanel();
 	private JPanel chatPanel;
+	private JPanel friendManagerPanel;
 	
 	private JScrollBar vertical;
 
@@ -122,9 +123,26 @@ public class MainPanelController implements ActionListener,SeChatPanelManager{
 		}
 	}
 	
+	public void setFriendManagerPanel(JPanel setFriendManagerPanel){
+		if(chatAndMessageContainer.isAncestorOf(chatScrollPane)){
+			chatAndMessageContainer.remove(chatScrollPane);
+			chatAndMessageContainer.remove(messagePanel);		
+		}
+		if(chatAndMessageContainer.isAncestorOf(friendManagerPanel)){
+			chatAndMessageContainer.remove(friendManagerPanel);
+		}
+		friendManagerPanel = setFriendManagerPanel;
+		chatAndMessageContainer.add(friendManagerPanel);
+		mainPanel.validate();
+		mainPanel.repaint();
+	}
+	
 	public void setScrollPaneChatPanel(JScrollPane curScrollPane, JPanel curChatPanel){
 		chatAndMessageContainer.remove(chatScrollPane);
 		chatAndMessageContainer.remove(messagePanel);
+		if(chatAndMessageContainer.isAncestorOf(friendManagerPanel)){
+			chatAndMessageContainer.remove(friendManagerPanel);	
+		}						
 		chatScrollPane = curScrollPane;
 		chatPanel = curChatPanel;
 		chatAndMessageContainer.add(chatScrollPane);

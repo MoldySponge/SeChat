@@ -23,6 +23,7 @@ public class User implements ActionListener,SeChatPanelManager{
 	private Friend[] friends; //holds each friend conversation and data
 	private JLabel[] friendLabels; //the selectable label for the friend in that conversation
 	
+	private FriendManager fMP;
 	private ClientRead reader;
 	private ClientWrite writer;
 	private MainPanelController mPM;
@@ -42,8 +43,19 @@ public class User implements ActionListener,SeChatPanelManager{
 	}
 	
 	public void prepareFriendLabels(){
-		for(int i = 0; i < friendLabels.length;i++){
-			friendLabels[i] = new JLabel(friends[i].getFriendUserName());
+		fMP = new FriendManager();
+		friendLabels[0] = new JLabel("Friend Manager");
+		friendLabels[0].setOpaque(true);
+		friendLabels[0].setBackground(Color.white);
+		friendLabels[0].setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.blue));
+		friendLabels[0].setPreferredSize(new Dimension(190, 30));
+		friendLabels[0].setMaximumSize(new Dimension(190,30));
+		friendLabels[0].setMinimumSize(new Dimension(190,30));
+		friendLabels[0].setAlignmentX(Component.CENTER_ALIGNMENT);
+		friendLabels[0].setHorizontalAlignment(SwingConstants.CENTER);
+		addFriendLabelListeners(0);
+		for(int i = 1; i < friendLabels.length;i++){
+			friendLabels[i] = new JLabel(friends[i-1].getFriendUserName());
 			friendLabels[i].setOpaque(true);
 			friendLabels[i].setBackground(Color.white);
 			friendLabels[i].setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.blue));
@@ -53,7 +65,7 @@ public class User implements ActionListener,SeChatPanelManager{
 			friendLabels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
 			friendLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
 			addFriendLabelListeners(i);
-			friendLabels[0].setBackground(new Color(50, 200, 150));			
+			friendLabels[1].setBackground(new Color(50, 200, 150));			
 		}
 		mPM.continueSetup();
 	}
@@ -75,7 +87,7 @@ public class User implements ActionListener,SeChatPanelManager{
 
 	public void setFriends(String []userFriends){
 		friends = new Friend[userFriends.length];
-		friendLabels = new JLabel[userFriends.length];		
+		friendLabels = new JLabel[userFriends.length+1];		
 		for(int i = 0; i < userFriends.length;i++){
 			friends[i] = new Friend(userFriends[i]);
 		}			
@@ -97,7 +109,10 @@ public class User implements ActionListener,SeChatPanelManager{
 				friendLabels[clickedHighlight].setBackground(Color.white);
 				clickedHighlight = i;
 				friendLabels[i].setBackground(new Color(50, 200, 150));
-				mPM.setScrollPaneChatPanel(friends[i].getScrollPane(), friends[i].getChatPanel());
+				if(i != 0)
+					mPM.setScrollPaneChatPanel(friends[i-1].getScrollPane(), friends[i-1].getChatPanel());
+				else
+					mPM.setFriendManagerPanel(fMP.getFriendManager());
 			}
 		});
 	}

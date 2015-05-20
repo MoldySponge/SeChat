@@ -29,7 +29,7 @@ public class ClientRead extends Thread {
 				inFromServer = client.getInputStream();
 				in = new DataInputStream(inFromServer);
 				message = in.readUTF();
-				System.out.println("Ready message: " + message);
+				
 				if(message.charAt(0) == 'r'){
 					writer = new ClientWrite(client, "u");
 					serverReady = 1;
