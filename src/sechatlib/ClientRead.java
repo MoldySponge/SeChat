@@ -14,6 +14,7 @@ public class ClientRead extends Thread {
 	
 	private ClientWrite writer;
 	private String message;
+	private String []friends;
 	private int serverReady = 0;
 	
 	public ClientRead(SSLSocket newClient, User newUser){
@@ -23,7 +24,7 @@ public class ClientRead extends Thread {
 	}
 	
 	public void run(){
-		
+		while(true){
 			try{				
 				inFromServer = client.getInputStream();
 				in = new DataInputStream(inFromServer);
@@ -33,18 +34,19 @@ public class ClientRead extends Thread {
 					writer = new ClientWrite(client, "u");
 					serverReady = 1;
 				}
-				message = in.readUTF();
 				if(serverReady != 0){
 					if(ProtocolDirector.returnedUserName(message)){
-						user.setUserName(ProtocolDirector.returnProtocolContents(message));					
-						}				
+						user.setUserName(ProtocolDirector.returnProtocolContents(message));
+						}
+					else if(ProtocolDirector.returnedFriendList(message)){
+						friends = ProtocolDirector.returnParsedFriendList(message);
+						user.setFriends(friends);
 					}
-				while(true){
-					in.readUTF();
-				}
+				}				
 		}catch(IOException ex){
 			System.out.print("IOException in readFromServer: " + ex.getMessage());			
-		}/*catch(InterruptedException e){
+		}
+	}/*catch(InterruptedException e){
 			//System.out.println("Timer exception");
 			//break;
 		}*/

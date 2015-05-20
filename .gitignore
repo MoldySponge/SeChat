@@ -1,2 +1,3 @@
-PasswordControl.java
-CredentialChecker.java
+src/sechatlib/PasswordControl.java
+src/sechatlib/CredentialChecker.java
+bin/
