@@ -69,7 +69,7 @@ public class LoginPanelController implements SeChatPanelManager{
 			pc = new PasswordControl();
 			String userName = userNameTextField.getText();
 			byte[] userPassword = pc.getHash(Arrays.toString(userPasswordField.getPassword()));
-			System.out.println(Arrays.toString(userPassword));
+			//System.out.println(Arrays.toString(userPassword));
 			if(cc.checkLogIn(userName, userPassword)){
 				return true;
 			}
@@ -77,11 +77,16 @@ public class LoginPanelController implements SeChatPanelManager{
 		}catch(UnsupportedEncodingException ex){
 		      System.out.println("Problem with password Encoding: " + ex.getMessage());
 		      return false;
-		}
-		
+		}		
 	}
 	
 	public SSLSocket getSSLConnection(){
 		return cc.getSSLConnection();
+	}
+	public JTextField getUserNameTextField(){
+		return userNameTextField;
+	}
+	public JPasswordField getUserPasswordField(){
+		return userPasswordField;
 	}
 }

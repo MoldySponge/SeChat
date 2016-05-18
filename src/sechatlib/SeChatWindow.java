@@ -84,20 +84,22 @@ public class SeChatWindow implements SeChatPanelManager, ActionListener{
 			
 		}
 		if(e.getSource() == logInButton){
-			try{
-				if(lPC.checkLogInCredentials()){
-					logOutButton.setVisible(true);
-					removeFromWindow(loginPanel);
-					mPC = new MainPanelController(lPC.getSSLConnection());
-					addToWindow(mainPanel);
-					seChatWindow.validate();
-					seChatWindow.repaint();
+			if(lPC.getUserNameTextField().getText().compareToIgnoreCase("") != 0){
+				try{
+					if(lPC.checkLogInCredentials()){
+						logOutButton.setVisible(true);
+						removeFromWindow(loginPanel);
+						mPC = new MainPanelController(lPC.getSSLConnection());
+						addToWindow(mainPanel);
+						seChatWindow.validate();
+						seChatWindow.repaint();
+					}
+					else{
+						System.out.println("Log In Incorrect.");
+					}
+				}catch(NoSuchAlgorithmException ex){
+					System.out.println("Error login from Main window: " + ex.getMessage());
 				}
-				else{
-					System.out.println("Log In Incorrect.");
-				}
-			}catch(NoSuchAlgorithmException ex){
-				System.out.println("Error login from Main window: " + ex.getMessage());
 			}
 		}
 		if(e.getSource() == logOutButton){
